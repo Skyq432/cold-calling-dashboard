@@ -623,9 +623,7 @@ const SettingsDashboard = ({ setLeads }: { setLeads: React.Dispatch<React.SetSta
                 }
 
                 
-                const newLeads: Lead[] = rows.slice(1)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  .map((row, index) => {
+                const newLeads: Lead[] = rows.slice(1).map((row) => {
     if (!row.trim()) return null; // Skip empty rows
 
     const values = row.split(',');
