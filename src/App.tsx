@@ -23,8 +23,13 @@ type Lead = {
     statusHistory: { status: LeadStatusKey; date: string; }[];
 };
 
-// --- INITIAL DATA (Starts empty, ready for user upload) ---
-const INITIAL_LEADS: Lead[] = [];
+// --- INITIAL DATA (Self-contained for deployment) ---
+const INITIAL_LEADS: Lead[] = [
+    { id: 1, name: "Bayo Adekunle", company: "Adebayo & Sons Garage", phone: "+2348012345678", status: "followUpCalls", notes: [{id: 1, text: "Initial contact made, sent brochure.", date: "2025-09-25T10:00:00Z"}], activities: [{ id: 101, task: "Follow-up call about new diagnostic tools", dueDate: "2025-09-29", status: "Pending" }], statusHistory: [{ status: 'callsConnected', date: '2025-09-25T10:00:00Z' }, { status: 'linkShared', date: '2025-09-26T11:00:00Z' }, { status: 'followUpCalls', date: '2025-09-28T15:00:00Z' }] },
+    { id: 2, name: "Chioma Okoro", company: "Lagos Premier Auto", phone: "+2348023456789", status: "needsAssessment", notes: [], activities: [{ id: 102, task: "Prepare proposal based on last discussion", dueDate: "2025-09-30", status: "Pending" }], statusHistory: [{ status: 'callsConnected', date: '2025-09-24T10:00:00Z' }, { status: 'needsAssessment', date: '2025-09-27T10:00:00Z' }] },
+    { id: 3, name: "Musa Ibrahim", company: "Abuja Car Kings", phone: "+2348034567890", status: "linkShared", notes: [], activities: [{ id: 103, task: "Schedule needs assessment", dueDate: "2025-10-02", status: "Pending" }], statusHistory: [{ status: 'callsConnected', date: '2025-09-26T10:00:00Z' }, { status: 'linkShared', date: '2025-09-26T10:05:00Z' }] },
+    { id: 4, name: "Aisha Bello", company: "Port Harcourt Motors", phone: "+2348045678901", status: "untouched", notes: [], activities: [], statusHistory: [] },
+];
 
 // --- Constants ---
 const FUNNEL_STAGES_MAP: Record<FunnelStageKey, string> = {
@@ -57,7 +62,6 @@ const UsersIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" heig
 const ChecklistIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="m9 14 2 2 4-4"></path></svg>);
 const TargetIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>);
 const ThumbsDownIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-rose-500"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 // const SettingsIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-slate-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>);
 const UploadIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>);
 const SearchIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>);
@@ -363,7 +367,19 @@ const ReportingDashboard = ({ leads }: { leads: Lead[] }) => {
 
 // --- Dashboard 2: Lead Management ---
 const LeadManagementDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads: React.Dispatch<React.SetStateAction<Lead[]>> }) => {
-    const [callState, setCallState] = useState<{ status: 'idle' | 'dialing' | 'connected', leadId: number | null, startTime: number | null, duration: number }>({ status: 'idle', leadId: null, startTime: null, duration: 0 });
+    const [callState, setCallState] = useState<{ status: 'idle' | 'dialing' | 'connected', leadId: number | null, startTime: number | null, duration: number }>(() => {
+        try {
+            const savedCallState = localStorage.getItem('coldCallingCallState');
+            if (savedCallState) {
+                const parsed = JSON.parse(savedCallState);
+                if (parsed.status === 'connected' && parsed.startTime) {
+                    parsed.duration = Date.now() - parsed.startTime;
+                }
+                return parsed;
+            }
+        } catch (error) { console.error("Could not parse call state", error); }
+        return { status: 'idle', leadId: null, startTime: null, duration: 0 };
+    });
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
     const [namesVisible, setNamesVisible] = useState(true);
     const [isCallingSessionActive, setIsCallingSessionActive] = useState(false);
@@ -371,19 +387,20 @@ const LeadManagementDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads:
     const [statusFilter, setStatusFilter] = useState('all');
 
     useEffect(() => {
-      let timer: ReturnType<typeof setTimeout>;
+        localStorage.setItem('coldCallingCallState', JSON.stringify(callState));
+        let timer: ReturnType<typeof setTimeout>;
         if (callState.status === 'connected' && callState.startTime) {
-            timer = setInterval(() => { setCallState(cs => ({ ...cs, duration: Date.now() - (cs.startTime ?? 0) })); }, 1000);
+            timer = setInterval(() => { setCallState(cs => ({ ...cs, duration: Date.now() - (cs.startTime ?? Date.now()) })); }, 1000);
         }
         return () => clearInterval(timer);
-    }, [callState.status, callState.startTime]);
+    }, [callState]);
 
     const handleStartCall = (leadId: number) => { 
         const lead = leads.find(l => l.id === leadId);
-        if (lead && lead.phone) {
-            window.location.href = `tel:${lead.phone}`;
-        }
         setCallState({ status: 'dialing', leadId, startTime: null, duration: 0 }); 
+        if (lead && lead.phone) {
+            setTimeout(() => { window.location.href = `tel:${lead.phone}`; }, 50);
+        }
     };
     
     const handleCallConnected = () => {
@@ -403,7 +420,7 @@ const LeadManagementDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads:
     const currentCallLead = useMemo(() => leads.find(l => l.id === callState.leadId), [leads, callState.leadId]);
     
     const handleEndCall = () => { 
-        setCallState(cs => ({ ...cs, status: 'idle' }));
+        setCallState({ status: 'idle', leadId: null, startTime: null, duration: 0 });
         setSelectedLead(currentCallLead || null);
     };
 
@@ -597,7 +614,7 @@ const LeadManagementDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads:
 }
 
 // --- Dashboard 3: Settings ---
-const SettingsDashboard = ({ setLeads }: { setLeads: React.Dispatch<React.SetStateAction<Lead[]>> }) => {
+const SettingsDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads: React.Dispatch<React.SetStateAction<Lead[]>> }) => {
     const [feedback, setFeedback] = useState<{type: 'success' | 'error', message: string} | null>(null);
     const fileInputRef = React.createRef<HTMLInputElement>();
 
@@ -621,9 +638,9 @@ const SettingsDashboard = ({ setLeads }: { setLeads: React.Dispatch<React.SetSta
                 if(!requiredHeaders.every(h => headers.includes(h))) {
                     throw new Error(`CSV must contain the following headers: ${requiredHeaders.join(', ')}`);
                 }
-
                 
-                const newLeads: Lead[] = rows.slice(1).map((row) => {
+               const newLeads: Lead[] = rows.slice(1)
+  .map((row, index) => {
     if (!row.trim()) return null; // Skip empty rows
 
     const values = row.split(',');
@@ -634,7 +651,7 @@ const SettingsDashboard = ({ setLeads }: { setLeads: React.Dispatch<React.SetSta
     }, {});
 
     return {
-      id: Date.now() + 1,
+      id: Date.now() + index,
       name: leadObject.name || 'N/A',
       company: leadObject.company || 'N/A',
       phone: leadObject.phone || 'N/A',
@@ -650,14 +667,13 @@ const SettingsDashboard = ({ setLeads }: { setLeads: React.Dispatch<React.SetSta
                      throw new Error("No valid lead data found in the file.");
                 }
 
-                setLeads(newLeads); // This replaces the old leads
+                setLeads(newLeads); 
                 setFeedback({type: 'success', message: `Successfully uploaded ${newLeads.length} new leads. Old data has been replaced.`});
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err: any) {
                 setFeedback({type: 'error', message: `Upload Failed: ${err.message}`});
             } finally {
-                // Reset file input
                 if(fileInputRef.current) {
                     fileInputRef.current.value = "";
                 }
@@ -668,7 +684,19 @@ const SettingsDashboard = ({ setLeads }: { setLeads: React.Dispatch<React.SetSta
     };
 
     return (
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+                <CardHeader title="Lead Statistics" subtitle="Your current lead database" />
+                <CardContent>
+                    <div className="flex items-center p-4 bg-slate-50 rounded-lg">
+                        <UsersIcon />
+                        <div className="ml-4">
+                            <p className="text-3xl font-bold text-slate-800">{leads.length.toLocaleString()}</p>
+                            <p className="text-sm text-slate-500">Total Leads Saved</p>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
             <Card>
                 <CardHeader title="Upload New Leads" subtitle="Replace all existing leads with a .csv file" />
                 <CardContent>
@@ -807,7 +835,6 @@ export default function App() {
   const [leads, setLeads] = useState<Lead[]>(() => {
     try {
       const savedLeads = localStorage.getItem('coldCallingLeads');
-      // If there's saved data, use it. Otherwise, start with the INITIAL_LEADS from the file.
       return savedLeads ? JSON.parse(savedLeads) : INITIAL_LEADS;
     } catch (error) {
       console.error("Could not parse leads from localStorage", error);
@@ -870,7 +897,7 @@ export default function App() {
 
         {activeTab === 'reporting' && <ReportingDashboard leads={leads} />}
         {activeTab === 'leads' && <LeadManagementDashboard leads={leads} setLeads={setLeads} />}
-        {activeTab === 'settings' && <SettingsDashboard setLeads={setLeads} />}
+        {activeTab === 'settings' && <SettingsDashboard leads={leads} setLeads={setLeads} />}
       </main>
     </div>
   );
