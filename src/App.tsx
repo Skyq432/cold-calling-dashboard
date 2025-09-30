@@ -62,9 +62,10 @@ const UsersIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" heig
 const ChecklistIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="m9 14 2 2 4-4"></path></svg>);
 const TargetIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>);
 const ThumbsDownIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-rose-500"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>);
-// const SettingsIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-slate-500"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>);
 const UploadIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>);
 const SearchIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>);
+const TrashIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>);
+
 
 // --- Reusable Components ---
 const Card: React.FC<React.PropsWithChildren<{ className?: string }>> = ({ className = "", children }) => (<div className={`rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-200/40 ${className}`}>{children}</div>);
@@ -616,6 +617,7 @@ const LeadManagementDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads:
 // --- Dashboard 3: Settings ---
 const SettingsDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads: React.Dispatch<React.SetStateAction<Lead[]>> }) => {
     const [feedback, setFeedback] = useState<{type: 'success' | 'error', message: string} | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const fileInputRef = React.createRef<HTMLInputElement>();
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -638,37 +640,57 @@ const SettingsDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads: React
                 if(!requiredHeaders.every(h => headers.includes(h))) {
                     throw new Error(`CSV must contain the following headers: ${requiredHeaders.join(', ')}`);
                 }
+
+                const existingPhones = new Set(leads.map(l => l.phone.replace(/\D/g, '')));
                 
-               const newLeads: Lead[] = rows.slice(1)
-  .map((row, index) => {
-    if (!row.trim()) return null; // Skip empty rows
+                let addedCount = 0;
+                let skippedCount = 0;
+                
+                const newLeadsFromFile: Omit<Lead, 'id'>[] = rows
+  .slice(1)
+  .map((row) => {
+    if (!row.trim()) return undefined;
 
     const values = row.split(',');
-
     const leadObject = headers.reduce<Record<string, string>>((obj, header, i) => {
       obj[header] = values[i] ? values[i].trim() : '';
       return obj;
     }, {});
 
-    return {
-      id: Date.now() + index,
-      name: leadObject.name || 'N/A',
-      company: leadObject.company || 'N/A',
-      phone: leadObject.phone || 'N/A',
-      status: 'untouched',
-      notes: [],
-      activities: [],
-      statusHistory: [],
-    } as Lead;
-  })
-  .filter((lead): lead is Lead => lead !== null);
+    const normalizedPhone = (leadObject.phone || '').replace(/\D/g, '');
 
-                if (newLeads.length === 0) {
-                     throw new Error("No valid lead data found in the file.");
+    if (normalizedPhone && !existingPhones.has(normalizedPhone)) {
+      existingPhones.add(normalizedPhone);
+      addedCount++;
+      return {
+        name: leadObject.name || 'N/A',
+        company: leadObject.company || 'N/A',
+        phone: leadObject.phone || 'N/A',
+        status: 'untouched',
+        notes: [],
+        activities: [],
+        statusHistory: [],
+      };
+    } else {
+      skippedCount++;
+      return undefined;
+    }
+  })
+  .filter(Boolean) as Omit<Lead, 'id'>[];
+
+                if (newLeadsFromFile.length === 0) {
+                     throw new Error(`No new leads to add. Skipped ${skippedCount} duplicate(s).`);
                 }
 
-                setLeads(newLeads); 
-                setFeedback({type: 'success', message: `Successfully uploaded ${newLeads.length} new leads. Old data has been replaced.`});
+                setLeads(prevLeads => {
+                    const maxId = prevLeads.reduce((max, lead) => Math.max(max, lead.id), 0);
+                    const finalNewLeads = newLeadsFromFile.map((lead, index) => ({
+                        ...lead,
+                        id: maxId + index + 1,
+                    }));
+                    return [...prevLeads, ...finalNewLeads];
+                }); 
+                setFeedback({type: 'success', message: `Upload complete. Added ${addedCount} new leads. Skipped ${skippedCount} duplicate(s).`});
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err: any) {
@@ -682,49 +704,75 @@ const SettingsDashboard = ({ leads, setLeads }: { leads: Lead[], setLeads: React
 
         reader.readAsText(file);
     };
+    
+    const handleDeleteAllLeads = () => {
+        setLeads([]);
+        setIsDeleteModalOpen(false);
+    }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-                <CardHeader title="Lead Statistics" subtitle="Your current lead database" />
-                <CardContent>
-                    <div className="flex items-center p-4 bg-slate-50 rounded-lg">
-                        <UsersIcon />
-                        <div className="ml-4">
-                            <p className="text-3xl font-bold text-slate-800">{leads.length.toLocaleString()}</p>
-                            <p className="text-sm text-slate-500">Total Leads Saved</p>
+        <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader title="Lead Statistics" subtitle="Your current lead database" />
+                    <CardContent>
+                        <div className="flex items-center p-4 bg-slate-50 rounded-lg">
+                            <UsersIcon />
+                            <div className="ml-4">
+                                <p className="text-3xl font-bold text-slate-800">{leads.length.toLocaleString()}</p>
+                                <p className="text-sm text-slate-500">Total Leads in Database</p>
+                            </div>
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader title="Upload New Leads" subtitle="Replace all existing leads with a .csv file" />
-                <CardContent>
-                    <p className="text-xs text-slate-500 mb-4">
-                        Ensure your CSV has columns named `name`, `company`, and `phone`. The `id` and `status` will be set automatically.
-                    </p>
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".csv"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                    />
-                    <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="inline-flex items-center rounded-full border border-transparent bg-sky-100 px-4 py-2 text-sm font-semibold text-sky-700 shadow-sm hover:bg-sky-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                    >
-                        <UploadIcon />
-                        Upload .csv File
-                    </button>
-                     {feedback && (
-                        <div className={`mt-4 text-sm rounded-md p-3 ${feedback.type === 'success' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
-                            {feedback.message}
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
-        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader title="Add New Leads" subtitle="Append leads from a .csv file" />
+                    <CardContent>
+                        <p className="text-xs text-slate-500 mb-4">
+                            Upload a CSV with `name`, `company`, and `phone` columns. Duplicates based on phone number will be skipped.
+                        </p>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".csv"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                        />
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="inline-flex items-center rounded-full border border-transparent bg-sky-100 px-4 py-2 text-sm font-semibold text-sky-700 shadow-sm hover:bg-sky-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                        >
+                            <UploadIcon />
+                            Upload .csv File
+                        </button>
+                         {feedback && (
+                            <div className={`mt-4 text-sm rounded-md p-3 ${feedback.type === 'success' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                                {feedback.message}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader title="Data Management" subtitle="Danger Zone" />
+                    <CardContent>
+                         <p className="text-sm text-slate-600 mb-4">Permanently delete all leads from the application. This action cannot be undone.</p>
+                        <button
+                            onClick={() => setIsDeleteModalOpen(true)}
+                            className="inline-flex items-center rounded-full bg-rose-100 px-4 py-2 text-sm font-semibold text-rose-800 shadow-sm hover:bg-rose-200"
+                        >
+                           <TrashIcon/> Delete All Leads
+                        </button>
+                    </CardContent>
+                </Card>
+            </div>
+             <ConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDeleteAllLeads}
+                title="Confirm Deletion"
+                message="Are you sure you want to delete all leads? This action is irreversible and will clear all data from your browser's storage."
+            />
+        </>
     );
 }
 // --- Modals ---
@@ -828,6 +876,25 @@ const LeadDetailModal = ({ lead, isOpen, onClose, onSave }: { lead: Lead | null;
         </div>
     </div>);
 };
+
+const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }: { isOpen: boolean; onClose: () => void; onConfirm: () => void; title: string; message: string; }) => {
+    if (!isOpen) return null;
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="w-full max-w-md rounded-xl bg-white shadow-2xl m-4">
+                <div className="p-6">
+                    <h3 className="text-lg font-semibold text-slate-800">{title}</h3>
+                    <p className="mt-2 text-sm text-slate-600">{message}</p>
+                </div>
+                <div className="bg-slate-50 px-6 py-4 flex justify-end gap-3 rounded-b-xl">
+                    <button onClick={onClose} className="rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50">Cancel</button>
+                    <button onClick={onConfirm} className="rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose-700">Confirm</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 
 // --- Main App Component (Controller) ---
 export default function App() {
